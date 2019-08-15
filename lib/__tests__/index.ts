@@ -12,16 +12,19 @@ const delayedResolve = (
       }, delay);
     });
   }
-  return new Promise(resolve => {
+  return new Promise((_, reject) => {
     setTimeout(() => {
-      resolve({ status, message });
+      reject({ status, message });
     }, delay);
-  }).then(data => {
-    throw data;
-  });
+  })
 };
 
+jest.disableAutomock()
+
 describe("RetryStrategy", () => {
+  afterEach(() => {
+    jest.useRealTimers()
+  })
   it("first request resolves in time", async () => {
     const createPromise = jest
       .fn()
@@ -91,15 +94,20 @@ describe("RetryStrategy", () => {
     expect(data).toEqual({ status: 200, message: "second resolve" });
   });
 
-  it("first request is slow, retried one times out", async () => {
+  it("first request is slow, retried one times out", () => {
+    jest.useFakeTimers()
     const createPromise = jest
       .fn()
       .mockReturnValueOnce(delayedResolve(200, "first resolve", 250))
-      .mockReturnValueOnce(delayedResolve(408, "last reject", 50));
+      .mockReturnValueOnce(delayedResolve(408, "last reject", 50))
 
-    const data = await RetryStrategy(createPromise, { timeout: 200 });
-    expect(createPromise).toHaveBeenCalledTimes(2);
-    expect(data).toEqual({ status: 200, message: "first resolve" });
+    RetryStrategy(createPromise, { timeout: 200, retryCount: 2 })
+    .then(data => {
+      expect(createPromise).toHaveBeenCalledTimes(2);
+      expect(data).toEqual({ status: 200, message: "first resolve" });
+    })
+
+    jest.advanceTimersByTime(300)
   });
 
   it("retries if first one times out", async () => {

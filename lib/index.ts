@@ -36,9 +36,10 @@ const RetryStrategy = (
 
       const delay = currentRetryCount * timeout;
       console.log("New timeout is", delay);
+
       const timeoutID = setTimeout(() => {
         console.log("Retry because of timeout");
-        return resolve(retry(retryQueue));
+        resolve(retry(retryQueue));
       }, delay);
 
       promise.catch(error => {
@@ -61,7 +62,10 @@ const RetryStrategy = (
 
       console.log("Race all promises");
       anyPromise(retryQueue)
-        .then(resolve)
+        .then(data => {
+          console.log('Race resolved with', data)
+          resolve(data)
+        })
         .catch(reasons => {
           console.log("Caught in anyRace");
           if (currentRetryCount === retryCount) {
@@ -71,7 +75,11 @@ const RetryStrategy = (
           console.log("Return reasons", reasons);
           return reasons;
         });
-    }).catch(e => {
+    }).then(data => {
+      console.log('Outside resolved with:', data)
+      return data
+    })
+    .catch(e => {
       // Normalize to always return array of reasons
       // even if first request fails and is not retryable
       return Array.isArray(e) ? e : [e];

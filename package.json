@@ -1,0 +1,28 @@
+{
+  "name": "retryable-promise-race",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git"
+  },
+  "author": "Jonas Badalic <jonas@badalic.com>",
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "test": "jest --coverage",
+    "test:watch": "jest --watchAll"
+  },
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@types/node": "^12.0.0",
+    "jest": "^24.7.1",
+    "jest-cli": "^24.7.1",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.4.3",
+    "uglify-js": "^3.5.4"
+  }
+}

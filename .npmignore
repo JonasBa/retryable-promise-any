@@ -1,0 +1,13 @@
+lib
+examples
+coverage
+
+jest.config.js
+jest.setup.js
+tsconfig.json
+webpack.config.js
+
+.babelrc
+.eslintrc.json
+.prettierrc
+.vscode

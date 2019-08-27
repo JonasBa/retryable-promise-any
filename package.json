@@ -7,6 +7,7 @@
   "author": "Jonas Badalic <jonas@badalic.com>",
   "main": "dist/index.js",
   "scripts": {
+    "examples:start": "yarn --cwd ./examples start",
     "clean": "rm -rf ./dist",
     "test": "jest --coverage",
     "test:watch": "jest --watchAll"

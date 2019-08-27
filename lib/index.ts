@@ -1,10 +1,14 @@
 import anyPromise from "./any";
 
-interface IRetryStrategyOptions {
-  timeout?: number;
-  retryCount?: number;
-  retryStatuses?: number[];
-}
+export type RetryStrategyOptions = {
+  timeout: number;
+  retryCount: number;
+  retryStatuses: number[];
+};
+
+type PartialRetryStrategyOptions = {
+  [T in keyof RetryStrategyOptions]?: RetryStrategyOptions[T];
+};
 
 const DEFAULT_RETRY_OPTIONS = {
   retryCount: 4,
@@ -13,8 +17,8 @@ const DEFAULT_RETRY_OPTIONS = {
 };
 
 const RetryStrategy = (
-  createPromise: () => Promise<any>,
-  options: IRetryStrategyOptions = DEFAULT_RETRY_OPTIONS
+  createPromise: (options: RetryStrategyOptions) => Promise<any>,
+  options: PartialRetryStrategyOptions = DEFAULT_RETRY_OPTIONS
 ): Promise<any> => {
   const timeout = options.timeout || DEFAULT_RETRY_OPTIONS.timeout;
   const retryCount = options.retryCount || DEFAULT_RETRY_OPTIONS.retryCount;
@@ -31,7 +35,7 @@ const RetryStrategy = (
     }
 
     return new Promise((resolve, reject) => {
-      const promise = createPromise();
+      const promise = createPromise({ timeout, retryCount, retryStatuses });
       retryQueue.push(promise);
 
       const delay = currentRetryCount * timeout;
@@ -63,8 +67,8 @@ const RetryStrategy = (
       console.log("Race all promises");
       anyPromise(retryQueue)
         .then(data => {
-          console.log('Race resolved with', data)
-          resolve(data)
+          console.log("Race resolved with", data);
+          resolve(data);
         })
         .catch(reasons => {
           console.log("Caught in anyRace");
@@ -75,15 +79,16 @@ const RetryStrategy = (
           console.log("Return reasons", reasons);
           return reasons;
         });
-    }).then(data => {
-      console.log('Outside resolved with:', data)
-      return data
     })
-    .catch(e => {
-      // Normalize to always return array of reasons
-      // even if first request fails and is not retryable
-      return Array.isArray(e) ? e : [e];
-    });
+      .then(data => {
+        console.log("Outside resolved with:", data);
+        return data;
+      })
+      .catch(e => {
+        // Normalize to always return array of reasons
+        // even if first request fails and is not retryable
+        return Array.isArray(e) ? e : [e];
+      });
   };
 
   return retry([]);

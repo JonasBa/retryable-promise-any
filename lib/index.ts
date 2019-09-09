@@ -1,4 +1,4 @@
-import anyPromise from "./any";
+import anyPromise from "./anyPromise";
 
 export type RetryStrategyOptions = {
   timeout: number;
@@ -68,6 +68,7 @@ const RetryStrategy = (
       anyPromise(retryQueue)
         .then(data => {
           console.log("Race resolved with", data);
+          clearTimeout(timeoutID);
           resolve(data);
         })
         .catch(reasons => {
@@ -79,16 +80,11 @@ const RetryStrategy = (
           console.log("Return reasons", reasons);
           return reasons;
         });
-    })
-      .then(data => {
-        console.log("Outside resolved with:", data);
-        return data;
-      })
-      .catch(e => {
-        // Normalize to always return array of reasons
-        // even if first request fails and is not retryable
-        return Array.isArray(e) ? e : [e];
-      });
+    }).catch(e => {
+      // Normalize to always return array of reasons
+      // even if first request fails and is not retryable
+      return Array.isArray(e) ? e : [e];
+    });
   };
 
   return retry([]);

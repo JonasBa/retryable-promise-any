@@ -7,8 +7,10 @@
   "author": "Jonas Badalic <jonas@badalic.com>",
   "main": "dist/index.js",
   "scripts": {
+    "build": "yarn run clean && tsc --p tsconfig.build.json && yarn run examples:copy",
+    "clean": "rm -rf ./dist && rm -rf examples/src/retry",
     "examples:start": "yarn --cwd ./examples start",
-    "clean": "rm -rf ./dist",
+    "examples:copy": "mkdir examples/src/retry && cp -r dist/ examples/src/retry",
     "test": "jest --coverage",
     "test:watch": "jest --watchAll"
   },

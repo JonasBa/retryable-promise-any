@@ -1,7 +1,7 @@
 const anyPromise = (promises: Array<Promise<any>>) => {
-  if(promises.length === 1){
-    console.log('Returning first promise')
-    return promises[0]
+  if (promises.length === 1) {
+    console.log("Returning first promise");
+    return promises[0];
   }
   return Promise.all(
     promises.map(promise => {
@@ -16,13 +16,13 @@ const anyPromise = (promises: Array<Promise<any>>) => {
   ).then(
     // If '.all' resolved, we've just got an array of errors.
     errors => {
-      console.log('All errors:', errors)
-      return Promise.reject(errors)
+      console.log("All errors:", errors);
+      return Promise.reject(errors);
     },
     // If '.all' rejected, we've got the result we wanted.
     value => {
-      console.log('All value:', value)
-      return Promise.resolve(value)
+      console.log("All value:", value);
+      return Promise.resolve(value);
     }
   );
 };

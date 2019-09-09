@@ -1,4 +1,5 @@
 import retryablePromiseAny from '../retryablePromiseAny';
+import { DEFAULT_RETRY_OPTIONS } from '../retryablePromiseAny';
 
 const delayedResolve = (status: number, message: string, delay = 1000): Promise<unknown> => {
   if (status < 300) {
@@ -18,6 +19,29 @@ const delayedResolve = (status: number, message: string, delay = 1000): Promise<
 describe('retryablePromiseAny', () => {
   afterEach(() => {
     jest.useRealTimers();
+  });
+
+  describe('createPromise', () => {
+    it('uses default options', async () => {
+      const createPromise = jest.fn(() => Promise.resolve());
+      await retryablePromiseAny(createPromise);
+
+      expect(createPromise).toHaveBeenCalledWith({ ...DEFAULT_RETRY_OPTIONS, currentRetry: 0 });
+    });
+
+    it('increments currentRetry', async () => {
+      const createPromise = jest
+        .fn()
+        .mockReturnValueOnce(delayedResolve(200, 'success', 2000))
+        .mockReturnValueOnce(delayedResolve(408, 'dead', 1000))
+        .mockReturnValueOnce(delayedResolve(200, 'last', 1000));
+
+      await retryablePromiseAny(createPromise);
+
+      expect(createPromise.mock.calls[0][0].currentRetry).toBe(0);
+      expect(createPromise.mock.calls[1][0].currentRetry).toBe(1);
+      expect(createPromise.mock.calls[2][0].currentRetry).toBe(2);
+    });
   });
 
   it('first request resolves in time', async () => {
@@ -106,7 +130,7 @@ describe('retryablePromiseAny', () => {
       expect(data).toEqual({ status: 200, message: 'first resolve' });
     });
 
-    jest.advanceTimersByTime(300);
+    jest.advanceTimersByTime(350);
   });
 
   it('retries if first one times out', async () => {

@@ -1,44 +1,42 @@
 import anyPromise from './utils/anyPromise';
 
 type RetryStrategyOptions = {
-  timeout: number;
-  retryCount: number;
-  retryStatuses: number[];
+  timeout?: number;
+  retryCount?: number;
+  retryStatuses?: number[];
 };
 
-type PartialRetryStrategyOptions = {
-  [T in keyof RetryStrategyOptions]?: RetryStrategyOptions[T];
-};
+type RetryStrategyCallbackOptions = RetryStrategyOptions & { currentRetry: number };
 
-const DEFAULT_RETRY_OPTIONS = {
+export const DEFAULT_RETRY_OPTIONS = {
   retryCount: 4,
   retryStatuses: [408, 504],
   timeout: 500
 };
 
 const retryablePromiseAny = <T>(
-  createPromise: (options: RetryStrategyOptions) => Promise<T>,
-  options: PartialRetryStrategyOptions = DEFAULT_RETRY_OPTIONS
+  createPromise: (options: RetryStrategyCallbackOptions) => Promise<T>,
+  options: RetryStrategyOptions = {}
 ): Promise<T> => {
   const timeout = options.timeout || DEFAULT_RETRY_OPTIONS.timeout;
   const retryCount = options.retryCount || DEFAULT_RETRY_OPTIONS.retryCount;
   const retryStatuses = options.retryStatuses || DEFAULT_RETRY_OPTIONS.retryStatuses;
 
   const retry = (pendingPromises: Array<Promise<T>>): Promise<T> => {
-    const currentRetryCount = pendingPromises.length + 1;
+    const newRetryCount = pendingPromises.length + 1;
 
-    if (currentRetryCount > retryCount) {
+    if (newRetryCount > retryCount) {
       // Exceeded timeout count, return Promise.any
       return anyPromise(pendingPromises);
     }
 
     return new Promise<T>((resolve, reject): void => {
-      const promise = createPromise({ timeout, retryCount, retryStatuses });
+      const promise = createPromise({ timeout, retryCount, retryStatuses, currentRetry: pendingPromises.length });
       pendingPromises.push(promise);
 
       const timeoutID = setTimeout(() => {
         resolve(retry(pendingPromises));
-      }, currentRetryCount * timeout);
+      }, newRetryCount * timeout);
 
       promise.catch(error => {
         clearTimeout(timeoutID);
@@ -46,13 +44,14 @@ const retryablePromiseAny = <T>(
         if (retryStatuses.includes(error.status)) {
           return resolve(retry(pendingPromises));
         }
+
         reject(error);
       });
 
       anyPromise<T>(pendingPromises)
         .then(resolve)
         .catch(reasons => {
-          if (currentRetryCount === retryCount) {
+          if (newRetryCount === retryCount) {
             reject(reasons);
           }
 

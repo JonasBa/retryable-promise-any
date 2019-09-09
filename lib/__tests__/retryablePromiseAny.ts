@@ -42,19 +42,19 @@ describe('retryablePromiseAny', () => {
     expect(createPromise).toHaveBeenCalledTimes(1);
   });
 
-  it('all requests reject and status is retryable', () => {
+  it('all requests reject and status is retryable', async () => {
     const createPromise = jest.fn().mockReturnValue(delayedResolve(408, 'dead', 150));
 
-    return retryablePromiseAny(createPromise, {
+    const data = await retryablePromiseAny(createPromise, {
       timeout: 200
-    }).catch(errors => {
-      expect(errors).toEqual([
-        { status: 408, message: 'dead' },
-        { status: 408, message: 'dead' },
-        { status: 408, message: 'dead' },
-        { status: 408, message: 'dead' }
-      ]);
-    });
+    }).catch(errors => errors);
+
+    expect(data).toEqual([
+      { status: 408, message: 'dead' },
+      { status: 408, message: 'dead' },
+      { status: 408, message: 'dead' },
+      { status: 408, message: 'dead' }
+    ]);
   });
 
   it('requests rejects and status is not retryable', async () => {

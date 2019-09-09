@@ -24,56 +24,41 @@ const retryablePromiseAny = <T>(
   const retryCount = options.retryCount || DEFAULT_RETRY_OPTIONS.retryCount;
   const retryStatuses = options.retryStatuses || DEFAULT_RETRY_OPTIONS.retryStatuses;
 
-  const retry = (retryQueue: Array<Promise<T>>): Promise<T> => {
-    const currentRetryCount = retryQueue.length + 1;
+  const retry = (pendingPromises: Array<Promise<T>>): Promise<T> => {
+    const currentRetryCount = pendingPromises.length + 1;
 
     if (currentRetryCount > retryCount) {
-      console.log('Exceeded timeouts, return a race of what is left');
-      return anyPromise(retryQueue);
+      // Exceeded timeout count, return Promise.any
+      return anyPromise(pendingPromises);
     }
 
     return new Promise<T>((resolve, reject): void => {
       const promise = createPromise({ timeout, retryCount, retryStatuses });
-      retryQueue.push(promise);
-
-      const delay = currentRetryCount * timeout;
-      console.log('New timeout is', delay);
+      pendingPromises.push(promise);
 
       const timeoutID = setTimeout(() => {
-        console.log('Retry because of timeout');
-        resolve(retry(retryQueue));
-      }, delay);
+        resolve(retry(pendingPromises));
+      }, currentRetryCount * timeout);
 
       promise.catch(error => {
-        console.log('Caught in promise.catch', error.message, 'checking if we can retry');
         clearTimeout(timeoutID);
-        console.log('Cleared timeout');
 
         if (retryStatuses.includes(error.status)) {
-          console.log('Retry because of error', error.status);
-          return resolve(retry(retryQueue));
+          return resolve(retry(pendingPromises));
         }
-
-        console.log('Not retryable, rejecting');
         reject(error);
       });
 
-      console.log('Race all promises');
-      anyPromise<T>(retryQueue)
-        .then(data => {
-          console.log('Race resolved with', data);
-          clearTimeout(timeoutID);
-          resolve(data);
-        })
+      anyPromise<T>(pendingPromises)
+        .then(resolve)
         .catch(reasons => {
-          console.log('Caught in anyRace');
           if (currentRetryCount === retryCount) {
-            console.log('Any has exceeded retries');
             reject(reasons);
           }
-          console.log('Return reasons', reasons);
+
           return reasons;
-        });
+        })
+        .finally(() => clearTimeout(timeoutID));
     }).catch(e => {
       // Normalize to always return array of reasons
       // even if first request fails and is not retryable

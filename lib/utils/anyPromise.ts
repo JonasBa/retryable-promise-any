@@ -6,16 +6,7 @@ const anyPromise = <T>(promises: Array<Promise<T>>): Promise<T> => {
     promises.map(promise => {
       return promise.then(value => Promise.reject(value), error => Promise.resolve(error));
     })
-  ).then(
-    errors => {
-      console.log('All errors:', errors);
-      return Promise.reject(errors);
-    },
-    value => {
-      console.log('All value:', value);
-      return Promise.resolve(value);
-    }
-  );
+  ).then(errors => Promise.reject(errors), value => Promise.resolve<T>(value));
 };
 
 export default anyPromise;

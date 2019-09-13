@@ -16,6 +16,8 @@ const delayedResolve = (status: number, message: string, delay = 1000): Promise<
   });
 };
 
+jest.disableAutomock();
+
 describe('retryablePromiseAny', () => {
   afterEach(() => {
     jest.useRealTimers();
@@ -32,7 +34,7 @@ describe('retryablePromiseAny', () => {
     it('increments currentRetry', async () => {
       const createPromise = jest
         .fn()
-        .mockReturnValueOnce(delayedResolve(200, 'success', 2000))
+        .mockReturnValueOnce(delayedResolve(200, 'success', 3500))
         .mockReturnValueOnce(delayedResolve(408, 'dead', 1000))
         .mockReturnValueOnce(delayedResolve(200, 'last', 1000));
 
@@ -59,14 +61,14 @@ describe('retryablePromiseAny', () => {
     const createPromise = jest.fn().mockReturnValueOnce(delayedResolve(401, 'Unauthorized', 100));
 
     const data = await retryablePromiseAny(createPromise, {
-      timeout: 200
+      timeout: 500
     }).catch(e => e);
 
     expect(data).toEqual([{ message: 'Unauthorized', status: 401 }]);
     expect(createPromise).toHaveBeenCalledTimes(1);
   });
 
-  it('all requests reject and status is retryable', async () => {
+  it('all requests reject and status is always retryable', async () => {
     const createPromise = jest.fn().mockReturnValue(delayedResolve(408, 'dead', 150));
 
     const data = await retryablePromiseAny(createPromise, {
@@ -99,7 +101,7 @@ describe('retryablePromiseAny', () => {
       .mockReturnValueOnce(delayedResolve(200, 'second resolve', 320));
 
     const data = await retryablePromiseAny(createPromise, {
-      retryCount: 2,
+      maxRetryCount: 2,
       timeout: 200
     });
 
@@ -125,7 +127,7 @@ describe('retryablePromiseAny', () => {
       .mockReturnValueOnce(delayedResolve(200, 'first resolve', 250))
       .mockReturnValueOnce(delayedResolve(408, 'last reject', 50));
 
-    retryablePromiseAny(createPromise, { timeout: 200, retryCount: 2 }).then(data => {
+    retryablePromiseAny(createPromise, { timeout: 200, maxRetryCount: 2 }).then(data => {
       expect(createPromise).toHaveBeenCalledTimes(2);
       expect(data).toEqual({ status: 200, message: 'first resolve' });
     });
@@ -133,15 +135,15 @@ describe('retryablePromiseAny', () => {
     jest.advanceTimersByTime(350);
   });
 
-  it('retries if first one times out', async () => {
+  it('retries if first one times out', () => {
     const createPromise = jest
       .fn()
       .mockReturnValueOnce(delayedResolve(408, 'first reject', 100))
       .mockReturnValueOnce(delayedResolve(200, 'second resolve', 10));
 
-    const data = await retryablePromiseAny(createPromise, { timeout: 200 });
-
-    expect(data).toEqual({ status: 200, message: 'second resolve' });
-    expect(createPromise).toHaveBeenCalledTimes(2);
+    retryablePromiseAny(createPromise, { timeout: 200 }).then(data => {
+      expect(data).toEqual({ status: 200, message: 'second resolve' });
+      expect(createPromise).toHaveBeenCalledTimes(2);
+    });
   });
 });

@@ -1,10 +1,12 @@
 lib
 examples
+coverage
 
+jest.config.js
+jest.setup.js
+tsconfig.json
 webpack.config.js
 
+.vscode
 .babelrc
 .eslintrc.json
-.jest.config.js
-.jest.setup.js
-.tsconfig.json

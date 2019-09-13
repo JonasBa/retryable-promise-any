@@ -4,7 +4,9 @@ module.exports = {
   entry: './lib/index.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'index.js'
+    filename: 'index.js',
+    library: 'retryable-promise-any',
+    libraryTarget: 'umd'
   },
   module: {
     rules: [
@@ -20,5 +22,5 @@ module.exports = {
   resolve: {
     extensions: ['.ts']
   },
-  mode: 'production'
+  mode: 'none'
 };

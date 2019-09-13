@@ -1,15 +1,21 @@
 {
 	"compilerOptions": {
-		"target": "esnext",
+    "target": "esnext",
 		"moduleResolution": "node",
+    "module": "esnext",
 		"strict": true,
 		"declaration": true,
     "forceConsistentCasingInFileNames": true,
 		"esModuleInterop": true,
 		"noImplicitAny": true,
-		"outDir": "dist"
+		"outFile": "dist/index.js"
 	},
 	"include": [
-		"lib"
+		"lib/index.ts"
 	]
+	// "exclude": [
+	// 	"**/*.test.ts",
+	// 	"dist",
+	// 	"examples"
+	// ]
 }

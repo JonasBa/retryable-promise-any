@@ -1,11 +1,12 @@
 {
   "presets": [
-    ["@babel/preset-env", {
-      "corejs": 3,
-      "targets": {
-        "ie": "11"
-      }
-    }],
+    // ["@babel/preset-env", {
+    //   "corejs": 3,
+    //   "useBuiltIns": "usage",
+    //   "targets": {
+    //     "ie": "11"
+    //   }
+    // }],
     "@babel/typescript"
   ],
   "plugins": [
@@ -13,6 +14,6 @@
     "@babel/proposal-object-rest-spread"
   ],
   "ignore": [
-    "**/*/__tests__/*"
+    "**/*.test.ts"
   ]
 }

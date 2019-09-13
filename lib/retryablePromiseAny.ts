@@ -1,10 +1,17 @@
 import anyPromise from './utils/anyPromise';
 
+<<<<<<< HEAD
 type RetryStrategyOptions = {
   timeout?: number;
   maxRetryCount?: number;
   shouldRetry?: (error: Response) => boolean;
   computeTimeout?: (currentRetry: number) => number;
+=======
+export type RetryStrategyOptions = {
+  timeout: number;
+  retryCount: number;
+  retryStatuses: number[];
+>>>>>>> fix(examples): add code
 };
 
 type RetryStrategyCallbackOptions = RetryStrategyOptions & { currentRetry: number };

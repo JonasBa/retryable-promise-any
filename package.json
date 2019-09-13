@@ -6,19 +6,23 @@
   },
   "author": "Jonas Badalic <jonas@badalic.com>",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "webpack && npm run build:types",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:examples": "yarn run build && yarn run examples:copy",
+    "build:examples": "npm run build && npm run build:types && npm run examples:copy",
     "clean": "rm -rf ./dist && rm -rf examples/src/retry",
-    "examples:start": "yarn --cwd ./examples start",
+    "examples:start": "cd examples && npm run start",
     "examples:copy": "mkdir examples/src/retry && cp -r dist/ examples/src/retry",
     "lint": "eslint 'lib/**/*.ts'",
     "test": "jest --coverage",
     "test:watch": "jest --watchAll"
   },
   "license": "MIT",
+  "engines": {
+    "node": "10.16.3"
+  },
   "directories": {
     "lib": "lib"
   },

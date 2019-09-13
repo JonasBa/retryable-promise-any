@@ -1,6 +1,6 @@
 {
-  "name": "retryable-promise-race",
-  "version": "0.0.1-beta",
+  "name": "retryable-promise-any",
+  "version": "0.0.1-beta2",
   "repository": {
     "type": "git"
   },
@@ -46,5 +46,6 @@
     "typescript": "^3.6.2",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8"
-  }
+  },
+  "dependencies": {}
 }

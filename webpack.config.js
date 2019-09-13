@@ -5,9 +5,11 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js',
-    library: 'retryable-promise-any',
+    libraryExport: 'default',
     libraryTarget: 'umd'
   },
+  mode: 'production',
+  devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : 'none',
   module: {
     rules: [
       {
@@ -22,5 +24,5 @@ module.exports = {
   resolve: {
     extensions: ['.ts']
   },
-  mode: 'none'
+  mode: 'production'
 };

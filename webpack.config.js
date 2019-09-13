@@ -9,7 +9,7 @@ module.exports = {
     libraryTarget: 'umd'
   },
   mode: 'production',
-  devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : 'none',
+  devtool: 'source-map',
   module: {
     rules: [
       {

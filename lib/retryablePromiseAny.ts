@@ -41,11 +41,13 @@ const retryablePromiseAny = <T>(
 
       promise.catch(error => {
         clearTimeout(timeoutID);
-        if (shouldRetry(error)) {
+        const shouldRetryRequest = shouldRetry(error);
+
+        if (shouldRetryRequest) {
           resolve(retry(pendingPromises));
         }
 
-        if (!shouldRetry(error)) {
+        if (!shouldRetryRequest) {
           reject(error);
         }
 

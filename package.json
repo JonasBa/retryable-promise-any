@@ -16,6 +16,7 @@
     "examples:start": "cd examples && npm run start",
     "lint": "eslint 'lib/**/*.ts'",
     "test": "jest --coverage",
+    "test:watch": "jest --watchAll",
     "release": "npm run build && npm publish --tag beta"
   },
   "license": "MIT",

@@ -13,9 +13,4 @@
 	"include": [
 		"lib/index.ts"
 	]
-	// "exclude": [
-	// 	"**/*.test.ts",
-	// 	"dist",
-	// 	"examples"
-	// ]
 }

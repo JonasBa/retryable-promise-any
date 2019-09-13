@@ -1,0 +1,10 @@
+lib
+examples
+
+webpack.config.js
+
+.babelrc
+.eslintrc.json
+.jest.config.js
+.jest.setup.js
+.tsconfig.json

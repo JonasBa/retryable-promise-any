@@ -11,13 +11,12 @@
   "scripts": {
     "build": "webpack && npm run build:types",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:examples": "npm run build && npm run build:types && npm run examples:copy",
-    "clean": "rm -rf ./dist && rm -rf examples/src/retry",
+    "build:examples": "npm run build && npm run build:types",
+    "clean": "rm -rf ./dist",
     "examples:start": "cd examples && npm run start",
-    "examples:copy": "mkdir examples/src/retry && cp -r dist/ examples/src/retry",
     "lint": "eslint 'lib/**/*.ts'",
     "test": "jest --coverage",
-    "test:watch": "jest --watchAll"
+    "release": "npm run build && npm publish --tag beta"
   },
   "license": "MIT",
   "engines": {

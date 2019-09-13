@@ -10,7 +10,5 @@
 		"noImplicitAny": true,
 		"outDir": "./dist"
 	},
-	"include": [
-		"lib/index.ts"
-	]
+	"files": ["lib/index.ts"]
 }

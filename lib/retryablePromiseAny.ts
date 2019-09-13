@@ -1,13 +1,13 @@
 import anyPromise from './utils/anyPromise';
 
-export type RetryStrategyOptions = {
+export type RetryOptions = {
   timeout?: number;
   maxRetryCount?: number;
   shouldRetry?: (error: Response) => boolean;
   computeTimeout?: (currentRetry: number) => number;
 };
 
-type RetryStrategyCallbackOptions = RetryStrategyOptions & { currentRetry: number };
+export type RetryCallbackOptions = RetryOptions & { currentRetry: number };
 
 export const DEFAULT_RETRY_OPTIONS = {
   timeout: 500,
@@ -16,8 +16,8 @@ export const DEFAULT_RETRY_OPTIONS = {
 };
 
 const retryablePromiseAny = <T>(
-  createPromise: (options: RetryStrategyCallbackOptions) => Promise<T>,
-  options: RetryStrategyOptions = {}
+  createPromise: (options: RetryCallbackOptions) => Promise<T>,
+  options: RetryOptions = {}
 ): Promise<T> => {
   const timeout = options.timeout || DEFAULT_RETRY_OPTIONS.timeout;
   const maxRetryCount = options.maxRetryCount || DEFAULT_RETRY_OPTIONS.maxRetryCount;

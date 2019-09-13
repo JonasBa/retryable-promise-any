@@ -1,6 +1,6 @@
 import './App.css';
 import React from 'react';
-import RetryStrategy, { RetryStrategyOptions } from 'retryable-promise-any';
+import retryablePromiseAny from 'retryable-promise-any';
 
 const SEARCH_KEY = '90ca3e16aa6c943e19903da80a0fed2d';
 const APPLICATION_ID = 'D8CTF91GO7';

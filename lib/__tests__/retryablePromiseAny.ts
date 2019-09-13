@@ -120,8 +120,7 @@ describe('retryablePromiseAny', () => {
     expect(data).toEqual({ status: 200, message: 'second resolve' });
   });
 
-  it('first request is slow, retried one times out', () => {
-    jest.useFakeTimers();
+  it('first request is slow, retried one times out', async () => {
     const createPromise = jest
       .fn()
       .mockReturnValueOnce(delayedResolve(200, 'first resolve', 250))

@@ -1,15 +1,14 @@
 {
 	"compilerOptions": {
-		"target": "esnext",
+    "target": "esnext",
 		"moduleResolution": "node",
+    "module": "esnext",
 		"strict": true,
 		"declaration": true,
     "forceConsistentCasingInFileNames": true,
 		"esModuleInterop": true,
 		"noImplicitAny": true,
-		"outDir": "dist"
+		"outDir": "./dist"
 	},
-	"include": [
-		"lib"
-	]
+	"files": ["lib/index.ts"]
 }

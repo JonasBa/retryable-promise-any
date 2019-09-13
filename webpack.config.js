@@ -4,8 +4,12 @@ module.exports = {
   entry: './lib/index.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'index.js'
+    filename: 'index.js',
+    libraryExport: 'default',
+    libraryTarget: 'umd'
   },
+  mode: 'production',
+  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -18,7 +22,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.ts']
+    extensions: ['.ts', '.js']
   },
   mode: 'production'
 };

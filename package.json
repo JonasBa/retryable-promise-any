@@ -1,24 +1,28 @@
 {
-  "name": "retryable-promise-race",
-  "version": "0.0.0",
+  "name": "retryable-promise-any",
+  "version": "0.0.1-beta2",
   "repository": {
     "type": "git"
   },
   "author": "Jonas Badalic <jonas@badalic.com>",
   "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "webpack && npm run build:types",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:examples": "yarn run build && yarn run examples:copy",
-    "clean": "rm -rf ./dist && rm -rf examples/src/retry",
-    "examples:start": "yarn --cwd ./examples start",
-    "examples:copy": "mkdir examples/src/retry && cp -r dist/ examples/src/retry",
+    "build:examples": "npm run build && npm run build:types",
+    "clean": "rm -rf ./dist",
+    "examples:start": "cd examples && npm run start",
     "lint": "eslint 'lib/**/*.ts'",
     "test": "jest --coverage",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "release": "npm run build && npm publish --tag beta"
   },
   "license": "MIT",
+  "engines": {
+    "node": "10.16.3"
+  },
   "directories": {
     "lib": "lib"
   },
@@ -27,7 +31,6 @@
     "@babel/core": "^7.6.0",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
-    "@babel/preset-env": "^7.6.0",
     "@babel/preset-typescript": "^7.6.0",
     "@types/jest": "^24.0.11",
     "@typescript-eslint/eslint-plugin": "^2.2.0",

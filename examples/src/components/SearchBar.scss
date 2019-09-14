@@ -1,0 +1,23 @@
+.SearchBar {
+  position: relative;
+
+  svg {
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translate(0, -50%);
+    width: 24px;
+    height: 24px;
+  }
+
+  &_input {
+    font-size: 16px;
+    padding: 8px 16px 8px 38px;
+    border: 1px solid rgba(0,0,0,.5);
+
+    &:focus {
+      outline: none;
+      border: 1px solid rgba(0,0,0,1);
+    }
+  }
+}

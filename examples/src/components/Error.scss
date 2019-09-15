@@ -1,0 +1,13 @@
+.Error {
+  margin: 24px;
+  padding: 24px;
+  text-align: center;
+  color: #FF6E50;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 5px 15px 0 rgba(37,44,97,0.15), 0 2px 4px 0 rgba(93,100,148,0.2);
+
+  p {
+    margin-bottom: 8px;
+  }
+}

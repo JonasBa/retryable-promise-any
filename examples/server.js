@@ -1,25 +1,37 @@
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const express = require('express');
+const algoliasearch = require('algoliasearch');
+
+const client = algoliasearch('D8CTF91GO7', '90ca3e16aa6c943e19903da80a0fed2d');
+const index = client.initIndex('actors');
 
 const server = express();
 server.use(cors());
+server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser());
 
-server.get('/failure', (_, res) => {
-  res.send(503, { message: "I'm a very busy server" });
+server.get('/failure', (req, res) => {
+  const timeout = parseInt(req.query.howSlow) || 0;
+  setTimeout(() => {
+    res.send(503, { message: "I'm a very busy server" });
+  }, timeout);
 });
 
-server.get('/other-server', (_, res) => {
-  res.send(200, { results: [{ name: 'Here' }] });
+server.get('/other-server', (req, res) => {
+  index.search({ query: req.query.query, hitsPerPage: 6 }).then(algoliaresults => {
+    res.send(200, { results: algoliaresults.hits });
+  });
 });
 
 server.get('/slow', (req, res) => {
-  const timeout = req.body.howSlow;
+  const timeout = parseInt(req.query.howSlow) || 0;
 
-  setTimeout(() => {
-    res.send(200, { message: "I'm a very busy server" });
-  }, timeout);
+  index.search({ query: req.query.query, hitsPerPage: 6 }).then(algoliaresults => {
+    setTimeout(() => {
+      res.send(200, res.send(200, { results: algoliaresults.hits }));
+    }, timeout);
+  });
 });
 
 server.listen(3001);

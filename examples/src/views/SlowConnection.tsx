@@ -20,7 +20,7 @@ const DEFAULT_STATE: ResultState = {
   results: null
 };
 
-const ServerFails: React.FC = () => {
+const SlowConnection: React.FC = () => {
   const [value, setValue] = React.useState('');
 
   const [noRetryResults, setNoRetryResults] = React.useState<ResultState>(DEFAULT_STATE);
@@ -101,4 +101,4 @@ const ServerFails: React.FC = () => {
   );
 };
 
-export default ServerFails;
+export default SlowConnection;

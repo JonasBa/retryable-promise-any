@@ -1,7 +1,11 @@
 import React from 'react';
 import ServerFails from './views/ServerFails';
+import SlowConnection from './views/SlowConnection';
+
 import { ThemeProvider } from '@chakra-ui/core';
-import { Global, css } from '@emotion/core';
+import { css, Global } from '@emotion/core';
+
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 const background = css`
   body,
@@ -15,11 +19,13 @@ const background = css`
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <Global styles={background}></Global>
-
-      <ServerFails />
-    </ThemeProvider>
+    <Router>
+      <ThemeProvider>
+        <Global styles={background}></Global>
+        <Route path="/server-fail/" component={ServerFails} />
+        <Route path="/slow-connection/" component={SlowConnection} />
+      </ThemeProvider>
+    </Router>
   );
 };
 

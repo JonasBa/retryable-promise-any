@@ -14,7 +14,7 @@ server.use(bodyParser());
 server.get('/failure', (req, res) => {
   const timeout = parseInt(req.query.howSlow) || 0;
   setTimeout(() => {
-    res.send(503, { message: "I'm a very busy server" });
+    res.send(503, { message: 'Server is overloaded, hopefully today is not Black Friday...' });
   }, timeout);
 });
 

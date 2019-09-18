@@ -39,10 +39,9 @@ const retryablePromiseAny = <T>(
         resolve(retry(pendingPromises));
       }, newRetryCount * timeout);
 
-      promise.catch(error => {
+      const onError = (error: any): any => {
         clearTimeout(timeoutID);
         const shouldRetryRequest = shouldRetry(error);
-
         if (shouldRetryRequest) {
           resolve(retry(pendingPromises));
         }
@@ -52,7 +51,14 @@ const retryablePromiseAny = <T>(
         }
 
         return error;
-      });
+      };
+
+      const onSuccess = (data: T): T => {
+        clearTimeout(timeoutID);
+        return data;
+      };
+
+      promise.then(onSuccess).catch(onError);
 
       anyPromise<T>(pendingPromises)
         .then(resolve)
@@ -62,8 +68,7 @@ const retryablePromiseAny = <T>(
           }
 
           return reasons;
-        })
-        .finally(() => clearTimeout(timeoutID));
+        });
     }).catch(e => {
       // Normalize to always return array of reasons
       // even if first request fails and is not retryable

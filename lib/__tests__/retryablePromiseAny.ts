@@ -1,8 +1,6 @@
 import retryablePromiseAny from '../retryablePromiseAny';
 import { DEFAULT_RETRY_OPTIONS } from '../retryablePromiseAny';
 
-jest.disableAutomock();
-
 const delayedResolve = (status: number, message: string, delay = 1000): Promise<unknown> => {
   if (status < 300) {
     return new Promise((resolve): void => {
@@ -60,7 +58,7 @@ describe('retryablePromiseAny', () => {
     const createPromise = jest.fn().mockReturnValue(delayedResolve(200, 'first success', 100));
 
     const data = await retryablePromiseAny(createPromise, {
-      timeout: 500
+      timeout: 200
     });
 
     expect(createPromise).toHaveBeenCalledTimes(1);

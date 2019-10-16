@@ -1,0 +1,21 @@
+.Loader {
+  height: 0;
+  width: 0;
+  padding: 15px;
+  border: 6px solid #ccc;
+  border-right-color: #888;
+  border-radius: 22px;
+  animation: rotate 1s infinite linear;
+  position: absolute;
+  left: calc(50% - 30px);
+  top: 120px;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0turn)
+  }
+  100% {
+    transform: rotate(1turn);
+  }
+}

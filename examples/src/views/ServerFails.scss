@@ -1,0 +1,27 @@
+.Title {
+  text-align: center;
+  color: #3a416f;
+  margin-top: 56px;
+}
+
+.Search {
+  display: grid;
+  grid-column-gap: 24px;
+  grid-template-columns: repeat(2, minmax(50%, 1fr));
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.SearchResults {
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 24px;
+  grid-row-gap: 24px;
+  grid-auto-flow: row;
+
+  img {
+    width: 100%;
+  }
+}

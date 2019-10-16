@@ -1,0 +1,43 @@
+$gray: #D3D4D9;
+$error: #FF6E50;
+$dark: #011936;
+$mid: #273469;
+
+.Search_container {
+  position: relative;
+}
+
+.SearchBar {
+  position: relative;
+  margin: 24px;
+
+  &:focus-within,
+  &:focus {
+    svg {
+      stroke: rgba(0,0,0,.4);
+    }
+  }
+
+  svg {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translate(0, -50%);
+    width: 20px;
+    height: 20px;
+    stroke: rgba(0,0,0,.4);
+  }
+
+  &_input {
+    border-radius: 4px;
+    font-size: 16px;
+    padding: 16px 24px 16px 48px;
+    border: 1px solid rgba(0,0,0,.2);
+    width: 100%;
+
+    &:focus {
+      outline: none;
+      border: 1px solid rgba(0,0,0,.3);
+    }
+  }
+}

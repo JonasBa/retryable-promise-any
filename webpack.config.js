@@ -8,8 +8,8 @@ module.exports = {
     libraryExport: 'default',
     libraryTarget: 'umd'
   },
-  mode: 'production',
   devtool: 'source-map',
+  mode: 'development',
   module: {
     rules: [
       {
@@ -23,6 +23,5 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js']
-  },
-  mode: 'production'
+  }
 };

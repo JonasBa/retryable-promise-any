@@ -22,6 +22,7 @@ const retryablePromiseAny = <T>(
   const timeout = options.timeout || DEFAULT_RETRY_OPTIONS.timeout;
   const maxRetryCount = options.maxRetryCount || DEFAULT_RETRY_OPTIONS.maxRetryCount;
   const shouldRetry = options.shouldRetry || DEFAULT_RETRY_OPTIONS.shouldRetry;
+  let cancelAllPending = false;
 
   const retry = (pendingPromises: Array<Promise<T>>): Promise<T> => {
     const newRetryCount = pendingPromises.length + 1;
@@ -39,31 +40,36 @@ const retryablePromiseAny = <T>(
         resolve(retry(pendingPromises));
       }, newRetryCount * timeout);
 
-      promise.catch(error => {
+      const onError = (error: Response): Response => {
         clearTimeout(timeoutID);
         const shouldRetryRequest = shouldRetry(error);
 
-        if (shouldRetryRequest) {
+        if (shouldRetryRequest && !cancelAllPending) {
           resolve(retry(pendingPromises));
         }
 
-        if (!shouldRetryRequest) {
+        if (!shouldRetryRequest && !cancelAllPending) {
           reject(error);
         }
 
         return error;
-      });
+      };
+
+      promise.catch(onError);
 
       anyPromise<T>(pendingPromises)
-        .then(resolve)
+        .then(data => {
+          cancelAllPending = true;
+          clearTimeout(timeoutID);
+          resolve(data);
+        })
         .catch(reasons => {
           if (newRetryCount === maxRetryCount) {
             reject(reasons);
           }
 
           return reasons;
-        })
-        .finally(() => clearTimeout(timeoutID));
+        });
     }).catch(e => {
       // Normalize to always return array of reasons
       // even if first request fails and is not retryable

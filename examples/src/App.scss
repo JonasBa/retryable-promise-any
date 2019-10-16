@@ -1,0 +1,10 @@
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+.Content {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(300px, 24%) 2fr;
+}

@@ -14,7 +14,7 @@ server.use(bodyParser());
 server.get('/failure', (req, res) => {
   const timeout = parseInt(req.query.howSlow) || 0;
   setTimeout(() => {
-    res.send(503, { message: 'Server is overloaded, hopefully today is not Black Friday...' });
+    res.send(503, { message: 'Server is overloaded, better hope this doesnt happen on Black Friday...' });
   }, timeout);
 });
 
@@ -26,10 +26,11 @@ server.get('/other-server', (req, res) => {
 
 server.get('/slow', (req, res) => {
   const timeout = parseInt(req.query.howSlow) || 0;
+  const nbHits = parseInt(req.query.nbHits) || 20;
 
-  index.search({ query: req.query.query, hitsPerPage: 6 }).then(algoliaresults => {
+  index.search({ query: req.query.query, hitsPerPage: nbHits }).then(algoliaresults => {
     setTimeout(() => {
-      res.send(200, res.send(200, { results: algoliaresults.hits }));
+      res.send(200, { results: algoliaresults.hits });
     }, timeout);
   });
 });

@@ -1,0 +1,36 @@
+
+
+.Sidebar {
+  background-color: #fff;
+  box-shadow: -1px 0 0 0 rgba(gray, .2) inset;
+
+  &_title {
+    padding: 24px;
+    margin: 0;
+    color: rgba(0,0,0,.8);
+    border-bottom: 1px solid rgba(gray,.2)
+  }
+
+  h4 {
+    padding-left: 36px;
+    font-weight: normal;
+    color: rgba(0,0,0, .6);
+  }
+
+  ul {
+    list-style-type: none;
+  }
+
+  li {
+    margin: 16px;
+
+    a {
+      color: rgba(0,0,0,.8);
+      text-decoration: none;
+
+      &:hover {
+        color: rgba(0,0,0,.9);
+      }
+    }
+  }
+}

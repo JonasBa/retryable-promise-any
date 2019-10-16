@@ -46,5 +46,9 @@
     "typescript": "^3.6.2",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.8"
+  },
+  "dependencies": {
+    "@types/react-transition-group": "^4.2.2",
+    "react-transition-group": "^4.3.0"
   }
 }
